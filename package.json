@@ -1,0 +1,26 @@
+{
+  "name": "UniversalTranslatorBackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/static": "8.0.2",
+    "@fastify/websocket": "^11.0.1",
+    "audio-decode": "^2.2.2",
+    "audiobuffer-to-wav": "^1.0.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.0.0",
+    "fastify-static": "^4.7.0",
+    "g711": "^1.0.1",
+    "wav": "^1.0.2",
+    "ws": "^8.18.0"
+  }
+}
