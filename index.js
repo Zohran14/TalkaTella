@@ -102,6 +102,7 @@ const fastify = Fastify({
 });
 fastify.register(fastifyStatic, {
   root: path.join(path.resolve(), "./dist"),
+  prefix: "/",
 });
 
 // this will work with fastify-static and send ./static/index.html
