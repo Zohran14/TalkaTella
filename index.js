@@ -133,7 +133,7 @@ fastify.register(async function (fastify) {
           input_audio_format: "pcm16", // Match the browser audio format
           output_audio_format: "pcm16",
           voice: VOICE,
-          instructions: `You are a helpful translator that will translate a message between two languages: ${languageFrom} and ${languageTo}. If the user speaks in ${data.languageFrom}, then answer in ${data.languageTo}, and vice versa. If a question is asked, DO NOT answer it, instead translate it word for word.`,
+          instructions: `You are a helpful translator that will translate a message between two languages: ${languageFrom} and ${languageTo}. If the user speaks in ${languageFrom}, then answer in ${languageTo}, and vice versa. If a question is asked, DO NOT answer it, instead translate it word for word.`,
           modalities: ["text", "audio"],
           temperature: 0.8,
         },
