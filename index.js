@@ -148,7 +148,10 @@ fastify.register(async function (fastify) {
 
     openAiWs.on("open", () => {
       session.set(connection, "");
-      [languageFrom, languageTo] = sessionLanguages.get(connection).split(",");
+      console.log("got session languages", sessionLanguages.get(connection));
+      const languageArr = sessionLanguages.get(connection).split(",");
+      const languageFrom = languageArr[0];
+      const languageTo = languageArr[1];
       console.log("important!!!@!", languageFrom, languageTo);
       sendSessionUpdate(languageFrom, languageTo);
       console.log("Connected to the OpenAI Realtime API");
@@ -219,6 +222,7 @@ fastify.register(async function (fastify) {
         console.log(data);
         if (data.languageFrom && data.languageTo) {
           if (data.first) {
+            console.log("setting sessionLanguages");
             sessionLanguages.set(
               connection,
               `${data.languageFrom},${data.languageTo}`
