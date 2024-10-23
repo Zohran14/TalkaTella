@@ -105,6 +105,7 @@ fastify.register(fastifyStatic, {
   prefix: "/",
 });
 
+const sessionLanguages = new Map();
 // this will work with fastify-static and send ./static/index.html
 fastify.setNotFoundHandler((req, res) => {
   res.sendFile("index.html");
@@ -124,7 +125,7 @@ fastify.register(async function (fastify) {
       }
     );
 
-    const sendSessionUpdate = (instructions) => {
+    const sendSessionUpdate = (languageFrom, languageTo) => {
       const sessionUpdate = {
         type: "session.update",
         session: {
@@ -132,7 +133,7 @@ fastify.register(async function (fastify) {
           input_audio_format: "pcm16", // Match the browser audio format
           output_audio_format: "pcm16",
           voice: VOICE,
-          instructions,
+          instructions: `You are a helpful translator that will translate a message between two languages: ${languageFrom} and ${languageTo}. If the user speaks in ${data.languageFrom}, then answer in ${data.languageTo}, and vice versa. If a question is asked, DO NOT answer it, instead translate it word for word.`,
           modalities: ["text", "audio"],
           temperature: 0.8,
         },
@@ -147,6 +148,9 @@ fastify.register(async function (fastify) {
 
     openAiWs.on("open", () => {
       session.set(connection, "");
+      [languageFrom, languageTo] = sessionLanguages.get(connection).split(",");
+      console.log("important!!!@!", languageFrom, languageTo);
+      sendSessionUpdate(languageFrom, languageTo);
       console.log("Connected to the OpenAI Realtime API");
     });
     openAiWs.on("error", (err) => {
@@ -214,9 +218,14 @@ fastify.register(async function (fastify) {
         const data = JSON.parse(message);
         console.log(data);
         if (data.languageFrom && data.languageTo) {
-          sendSessionUpdate(
-            `You are a helpful translator that will translate a message between two languages: ${data.languageFrom} and ${data.languageTo}. If the user speaks in ${data.languageFrom}, then answer in ${data.languageTo}, and vice versa. If a question is asked, DO NOT answer it, instead translate it word for word.`
-          );
+          if (data.first) {
+            sessionLanguages.set(
+              connection,
+              `${data.languageFrom},${data.languageTo}`
+            );
+          } else {
+            sendSessionUpdate(data.languageFrom, data.languageTo);
+          }
         }
       } catch {
         try {
