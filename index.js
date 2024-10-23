@@ -148,13 +148,15 @@ fastify.register(async function (fastify) {
 
     openAiWs.on("open", () => {
       session.set(connection, "");
-      console.log("got session languages", sessionLanguages.get(connection));
-      const languageArr = sessionLanguages.get(connection).split(",");
-      const languageFrom = languageArr[0];
-      const languageTo = languageArr[1];
-      console.log("important!!!@!", languageFrom, languageTo);
-      sendSessionUpdate(languageFrom, languageTo);
-      console.log("Connected to the OpenAI Realtime API");
+      const currentSessionLanguages = sessionLanguages.get(connection);
+      if (currentSessionLanguages) {
+        const languageArr = currentSessionLanguages.split(",");
+        const languageFrom = languageArr[0];
+        const languageTo = languageArr[1];
+        console.log("important!!!@!", languageFrom, languageTo);
+        sendSessionUpdate(languageFrom, languageTo);
+        console.log("Connected to the OpenAI Realtime API");
+      }
     });
     openAiWs.on("error", (err) => {
       console.error("Error from jadlfjaocjaojfoajfo", err);
